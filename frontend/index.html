@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SmartFlix — Hybrid Movie Recommendation System</title>
+<meta name="description" content="SmartFlix: a hybrid (content-based × collaborative) movie recommender across Indian cinema and Hollywood. Chennai Institute of Technology, PBL Machine Learning 2026–27.">
+<meta name="theme-color" content="#06060b">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;500;800;900&family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="loading">
+
+<div id="grain"></div><div id="vig"></div>
+<div id="cur"></div><div id="curRing"><span></span></div>
+
+<!-- ============ LOADER: film leader ============ -->
+<div id="loader">
+  <div class="curtain l"></div><div class="curtain r"></div>
+  <div class="leader">
+    <svg viewBox="0 0 300 300" class="ld-svg">
+      <circle cx="150" cy="150" r="120" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1.5"/>
+      <circle cx="150" cy="150" r="96" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+      <line x1="0" y1="150" x2="300" y2="150" stroke="rgba(255,255,255,.3)"/><line x1="150" y1="0" x2="150" y2="300" stroke="rgba(255,255,255,.3)"/>
+      <path class="sweep" d="M150 150 L150 30 A120 120 0 0 1 270 150 Z" fill="rgba(255,178,62,.22)"/>
+      <circle id="ldArc" cx="150" cy="150" r="120" fill="none" stroke="#ffb23e" stroke-width="3" stroke-dasharray="754" stroke-dashoffset="754" transform="rotate(-90 150 150)"/>
+    </svg>
+    <div class="ld-num" id="ldNum">3</div>
+    <div class="ld-txt"><b>SMARTFLIX</b><span id="ldMsg">threading the reel…</span></div>
+  </div>
+</div>
+
+<div id="progress"><i></i></div>
+<nav id="dots" aria-label="Sections">
+  <a href="#hero" data-l="Premiere"></a><a href="#langs" data-l="Languages"></a><a href="#how" data-l="How it thinks"></a>
+  <a href="#calibrate" data-l="Calibrate"></a><a href="#reel" data-l="Your reel"></a><a href="#universe" data-l="Universe"></a>
+  <a href="#lab" data-l="The lab"></a><a href="#credits" data-l="Credits"></a>
+</nav>
+<header id="top">
+  <a class="logo" href="#hero" data-cursor="TOP"><svg viewBox="0 0 32 32" width="26" height="26"><circle cx="16" cy="16" r="14" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16" cy="9" r="3" fill="currentColor"/><circle cx="16" cy="23" r="3" fill="currentColor"/><circle cx="9" cy="16" r="3" fill="currentColor"/><circle cx="23" cy="16" r="3" fill="currentColor"/></svg><span>SMART<em>FLIX</em></span></a>
+  <div class="hint" id="searchHint" data-cursor="SEARCH"><kbd>/</kbd> search the universe</div>
+</header>
+
+<main>
+<!-- ============ HERO ============ -->
+<section id="hero">
+  <canvas id="beam"></canvas>
+  <div class="wall" id="wall" aria-hidden="true"></div>
+  <div class="hero-in">
+    <p class="kicker">Chennai Institute of Technology · PBL · Machine Learning 2026–27</p>
+    <h1 class="mega" aria-label="SmartFlix"><span class="row" data-split>SMART</span><span class="row grad" data-split>FLIX</span></h1>
+    <p class="lede serif">Cinema that <em>knows you back.</em></p>
+    <p class="sub">A hybrid recommender that fuses <b>content-based</b> and <b>collaborative</b> filtering — across <b id="hMovies">248</b> films from Tamil, Hindi, Telugu, Malayalam, Kannada, Bengali, Marathi and Hollywood.</p>
+    <div class="stats">
+      <div><b data-stat="movies">0</b><span>films</span></div>
+      <div><b data-stat="languages">0</b><span>languages</span></div>
+      <div><b data-stat="users">0</b><span>viewers</span></div>
+      <div><b data-stat="ratings">0</b><span>ratings</span></div>
+    </div>
+  </div>
+  <a id="reelBadge" href="#calibrate" data-mag data-cursor="PULL">
+    <svg viewBox="0 0 200 200"><defs><path id="circ" d="M100 100 m-78 0 a78 78 0 1 1 156 0 a78 78 0 1 1 -156 0"/></defs>
+      <text class="spin"><textPath href="#circ" startOffset="0">PULL THE REEL • CALIBRATE YOUR TASTE • PULL THE REEL • CALIBRATE YOUR TASTE •</textPath></text>
+      <circle cx="100" cy="100" r="40" fill="#ffb23e"/><path d="M90 82 L120 100 L90 118Z" fill="#06060b"/></svg>
+  </a>
+  <div class="cue"><i></i><span>scroll</span></div>
+</section>
+
+<!-- ============ LANGUAGE MARQUEE ============ -->
+<section id="langs" aria-label="Languages">
+  <div class="mrow" id="mrow1"></div>
+  <div class="mrow outline" id="mrow2"></div>
+</section>
+
+<!-- ============ HOW IT THINKS (pinned horizontal) ============ -->
+<section id="how">
+  <div class="pin">
+    <div class="how-head"><p class="kicker">System architecture · report §4.1</p><h2 class="h2">How it <em class="serif">thinks</em></h2></div>
+    <div class="track" id="howTrack"></div>
+    <div class="how-bar"><i id="howBar"></i></div>
+  </div>
+</section>
+
+<!-- ============ CALIBRATE ============ -->
+<section id="calibrate">
+  <div class="sec-head">
+    <p class="kicker rv">Step 01 · teach the engine</p>
+    <h2 class="h2 rv">Calibrate your <em class="serif">taste</em></h2>
+    <p class="lead rv">Drag a film <b>right</b> if you love it, <b>up</b> if you like it, <b>left</b> if it isn't for you. Or tap a persona orb to seed a taste instantly. Every swipe re-trains your hybrid profile in real time.</p>
+  </div>
+  <div class="cal-grid">
+    <div class="orbit-wrap rv">
+      <div class="orbit" id="orbit"><div class="orbit-core" id="orbitCore"><b>TASTE</b><span>ORBIT</span></div></div>
+      <p class="mono tiny">persona seeds · hover to read · tap to ignite</p>
+    </div>
+    <div class="deck-wrap rv">
+      <div class="deck" id="deck"></div>
+      <div class="deck-hint"><span><i>←</i> not for me</span><span><i>↑</i> liked</span><span><i>→</i> loved</span></div>
+    </div>
+    <div class="dna rv">
+      <div class="dna-head"><b>Taste DNA</b><span id="dnaCount" class="mono">0 rated</span></div>
+      <svg id="radar" viewBox="-130 -130 260 260"></svg>
+      <div class="langbars" id="langbars"></div>
+      <div class="ignite" id="ignite" data-go="reel" data-cursor="IGNITE">
+        <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" class="t"/><circle cx="60" cy="60" r="52" class="v" id="igArc"/></svg>
+        <div><b id="igTxt">RATE 3 FILMS</b><span id="igSub" class="mono">to ignite the engine</span></div>
+      </div>
+      <a href="#" id="clearTaste" class="clear" data-cursor="RESET">⌫ wipe my taste profile</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REEL (recommendations) ============ -->
+<section id="reel">
+  <div class="sec-head">
+    <p class="kicker rv">Step 02 · hybrid ranking</p>
+    <h2 class="h2 rv">Your <em class="serif">reel</em></h2>
+    <p class="lead rv" id="reelWhy">Top-N picks ranked by <code>α · Content + (1 − α) · Collaborative</code>.</p>
+  </div>
+  <div class="reel-grid">
+    <aside class="dock rv">
+      <div class="dial-row"><div class="dial" id="dialAlpha"></div><div class="dial" id="dialDiv"></div></div>
+      <div class="formula mono" id="formula"></div>
+      <p class="mono tiny">filter the reel</p>
+      <div class="orbs" id="reelLangs"></div>
+      <div class="scrub" id="reelYears"></div>
+      <div class="lamp"><i id="lampDot"></i><span id="lampTxt" class="mono">warming up</span></div>
+    </aside>
+    <div class="cf-wrap rv">
+      <div class="cf" id="cf" tabindex="0" aria-label="Recommendations carousel"></div>
+      <div class="cf-info" id="cfInfo"></div>
+      <div class="cf-nav mono tiny">drag · arrow keys · click a card</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ UNIVERSE ============ -->
+<section id="universe">
+  <div class="sec-head">
+    <p class="kicker rv">Step 03 · the catalogue</p>
+    <h2 class="h2 rv">The <em class="serif">universe</em> <span class="big-n" id="uniCount">0</span></h2>
+    <p class="lead rv">Real films, real release years — Indian cinema from Ray to Rajamouli and Hollywood's biggest productions. Filter by language orb, genre, or slide through time.</p>
+  </div>
+  <div class="uni-tools rv">
+    <input id="uniQ" class="bigq" placeholder="search title, director, actor…" autocomplete="off" spellcheck="false">
+    <div class="orbs" id="uniLangs"></div>
+    <div class="genres" id="uniGenres"></div>
+    <div class="uni-row"><div class="scrub" id="uniYears"></div><div class="sorts" id="uniSort"></div></div>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div id="sentinel" class="mono tiny">…</div>
+</section>
+
+<!-- ============ LAB ============ -->
+<section id="lab">
+  <div class="sec-head">
+    <p class="kicker rv">Step 04 · evaluation · report §6.1</p>
+    <h2 class="h2 rv">The <em class="serif">lab</em></h2>
+    <p class="lead rv" id="labNote">Computing held-out metrics…</p>
+  </div>
+  <div class="lab-grid">
+    <div class="card rv"><div class="card-h"><b>Top-N quality @10</b>
+      <div class="seg" id="labMode"><span class="on" data-m="methods">Warm users</span><span data-m="cold_start">Cold start · 3 ratings</span><i></i></div></div>
+      <div id="labBars"></div></div>
+    <div class="card rv"><div class="card-h"><b>Where should α sit?</b><span class="mono tiny">NDCG@10 vs α</span></div><div id="labSweep"></div></div>
+    <div class="card rv"><div class="card-h"><b>Rating prediction</b><span class="mono tiny">lower is better</span></div><div id="labErr"></div></div>
+    <div class="card rv formulas"><div class="card-h"><b>Metric definitions</b></div>
+      <p class="mono">Precision@K = relevant recommended / K</p><p class="mono">Recall@K = relevant recommended / total relevant</p>
+      <p class="mono">NDCG@K = DCG@K / IDCG@K</p><p class="mono">MAE = (1/n) Σ |yᵢ − ŷᵢ|</p><p class="mono">RMSE = √[(1/n) Σ (yᵢ − ŷᵢ)²]</p>
+      <p class="tiny dim">Protocol: 25 % of every viewer's ratings are held out (seeded). “Relevant” = held-out rating ≥ 4.</p></div>
+  </div>
+</section>
+</main>
+
+<!-- ============ CREDITS ============ -->
+<footer id="credits">
+  <div class="cr-top">
+    <div class="rv"><p class="kicker">Project team</p>
+      <p class="cr-name">M P Sibhi</p><p class="cr-name">Ruhan Prasad S</p>
+      <p class="kicker" style="margin-top:2rem">Faculty guide</p><p class="cr-name sm">Dr. T. Vignesh</p></div>
+    <div class="rv"><p class="kicker">Institution</p>
+      <p class="cr-name sm">Chennai Institute of Technology</p><p class="dim">Dept. of Computer Science &amp; Engineering<br>Project-Based Learning · Machine Learning · 2026–2027<br>Anna University, Chennai (Autonomous)</p>
+      <p class="kicker" style="margin-top:2rem">Stack</p><p class="dim">Python · Flask · pandas · NumPy · scikit-learn (TF-IDF, cosine) · vanilla JS / SVG / Canvas</p></div>
+    <div class="rv refs"><p class="kicker">References</p>
+      <ol>
+        <li>Lops, de Gemmis &amp; Semeraro (2011) — Content-based recommender systems</li>
+        <li>Konstan &amp; Riedl (2012) — Recommender systems: algorithms to UX</li>
+        <li>Burke (2002) — Hybrid recommender systems</li>
+        <li>Koren, Bell &amp; Volinsky (2009) — Matrix factorization techniques</li>
+        <li>Sarwar et al. (2001) — Item-based collaborative filtering</li>
+        <li>Harper &amp; Konstan (2015) — The MovieLens datasets</li>
+        <li>GroupLens (2024) — MovieLens 32M</li>
+        <li>Pedregosa et al. (2011) — Scikit-learn</li>
+      </ol></div>
+  </div>
+  <div class="wordmark" aria-hidden="true">SMARTFLIX</div>
+  <p class="foot mono tiny">Film metadata: curated catalogue (titles, years, cast, directors). Scores are approximate public critic/audience scores. Posters are generated; add a TMDB key for real artwork &amp; trailers.</p>
+</footer>
+
+<!-- ============ CINEMA (movie detail) ============ -->
+<div id="cinema" aria-hidden="true">
+  <div class="cn-bg" id="cnBg"></div>
+  <a href="#" class="cn-x" id="cnX" data-cursor="CLOSE" aria-label="Close"><i></i><i></i></a>
+  <div class="cn-scroll" id="cnScroll"><div class="cn-body" id="cnBody"></div></div>
+</div>
+
+<!-- ============ SEARCH PALETTE ============ -->
+<div id="palette" aria-hidden="true">
+  <div class="pal-box">
+    <input id="palQ" placeholder="Search films, directors, actors, languages…" autocomplete="off" spellcheck="false">
+    <div id="palRes"></div>
+    <div class="pal-foot mono tiny"><span>↑↓ navigate</span><span>↵ open</span><span>esc close</span></div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script src="js/poster.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
